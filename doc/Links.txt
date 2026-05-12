@@ -1,4 +1,4 @@
-Estructura del Backend:
+Estructura del Backend(borrador):
 https://docs.google.com/document/d/1OOUvaMUS-UwDAb6DC5ELrtkyZfsjGAyP0utw7c9jt5g/edit?usp=sharing
 
 Diagrama de clases:
