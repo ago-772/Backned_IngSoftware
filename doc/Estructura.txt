@@ -1,0 +1,113 @@
+src/main/java/com/iot/
+├── models/
+│   ├── entities/
+│   │   ├── TelemetryReading.java       
+│   │   ├── Event.java                  
+│   │   ├── Metric.java                 
+│   │   ├── MateSession.java            
+│   │   ├── SystemAlert.java            
+│   │   └── WaterLevelReading.java      
+│   ├── enums/
+│   │   ├── EventType.java              
+│   │   ├── MetricType.java             
+│   │   ├── SessionStatus.java          
+│   │   ├── AlertType.java              
+│   │   └── AlertSeverity.java          
+│   └── dto/
+│       ├── TelemetryRequestDto.java    
+│       ├── TelemetryResponseDto.java   
+│       ├── EventRequestDto.java        
+│       ├── EventResponseDto.java       
+│       ├── MetricResponseDto.java      
+│       ├── MateSessionRequestDto.java  
+│       ├── MateSessionResponseDto.java 
+│       ├── SystemAlertRequestDto.java  
+│       ├── SystemAlertResponseDto.java 
+│       ├── WaterLevelRequestDto.java   
+│       └── WaterLevelResponseDto.java  
+│
+├── services/
+│   ├── TelemetryService.java           
+│   │     create(), findAll(), findLatest()
+│   │
+│   ├── EventService.java               
+│   │     create(), findAll(), findByType(), findLatestByType(), countByType()
+│   │
+│   ├── MetricService.java              
+│   │     save(), findAll(), findByType(), findLatestByType()
+│   │
+│   ├── MateSessionService.java         
+│   │     handleEvent(), findAll(), findActive(), findById()
+│   │     closeActiveSession() 
+│   │
+│   ├── SystemAlertService.java         
+│   │     create(), acknowledge(), findUnacknowledged(), findAll(), findBySeverity(), findLatestByType()
+│   │
+│   ├── WaterLevelService.java          
+│   │     create(), findAll(), findLatest()
+│   │
+│   └── ProcessingService.java          
+│         process(), computeMovingAverage(), computeCoolingRate(),
+│         estimateMinutesToTarget(), computeBrewFrequency(),
+│         persistMetrics(), fetchRecentReadings()
+│
+├── repositories/
+│   ├── TelemetryRepository.java        
+│   │     findByTimestampBetweenOrderByTimestampAsc(), findTopByOrderByTimestampDesc()
+│   │
+│   ├── EventRepository.java            
+│   │     findByTypeOrderByTimestampDesc(), findTopByTypeOrderByTimestampDesc()
+│   │     findByTimestampBetweenOrderByTimestampAsc(), countByType()
+│   │
+│   ├── MetricRepository.java           
+│   │     findByTypeOrderByCreatedAtDesc(), findTopByTypeOrderByCreatedAtDesc()
+│   │     findByTypeAndCreatedAtBetweenOrderByCreatedAtAsc()
+│   │
+│   ├── MateSessionRepository.java      
+│   │     findTopByStatusOrderByStartTimeDesc(), findByStatusOrderByStartTimeDesc()
+│   │     findByStartTimeBetweenOrderByStartTimeAsc(), findTopByStatusOrderByEndTimeDesc()
+│   │
+│   ├── SystemAlertRepository.java      
+│   │     findByAcknowledgedFalseOrderByTriggeredAtDesc()
+│   │     findBySeverityOrderByTriggeredAtDesc(), findByAlertTypeOrderByTriggeredAtDesc()
+│   │     findTopByAlertTypeOrderByTriggeredAtDesc()
+│   │
+│   └── WaterLevelRepository.java       
+│         findTopByOrderByTimestampDesc()
+│         findByTimestampBetweenOrderByTimestampAsc()
+│
+├── controllers/
+│   ├── TelemetryController.java        
+│   │     POST /telemetry, GET /telemetry, GET /telemetry/latest
+│   │
+│   ├── EventController.java            
+│   │     POST /events, GET /events, GET /events/type/{type}, GET /events/count/{type}
+│   │
+│   ├── MetricController.java           
+│   │     GET /metrics, GET /metrics/type/{type}, GET /metrics/latest/{type}
+│   │
+│   ├── MateSessionController.java      
+│   │     GET /sessions, GET /sessions/active, GET /sessions/{id}
+│   │
+│   ├── SystemAlertController.java      
+│   │     GET /alerts, GET /alerts/unacknowledged, GET /alerts/severity/{severity}
+│   │     PATCH /alerts/{id}/acknowledge
+│   │
+│   ├── LiveFeedController.java         
+│   │     GET /live/telemetry
+│   │
+│   └── WaterLevelController.java       
+│         POST /water-level, GET /water-level, GET /water-level/latest
+│
+├── observer/
+│   ├── TelemetryObserver.java          ✅  interface
+│   │     onTelemetryReceived(TelemetryResponseDto)
+│   ├── TelemetrySubject.java           
+│   │     notifyAll(TelemetryResponseDto)
+│   ├── MetricObserver.java             
+│   ├── AlertObserver.java              
+│   └── LiveFeedObserver.java           
+│         getLatestReading()
+│
+└── docs/
+      └── openapi.yml                   
