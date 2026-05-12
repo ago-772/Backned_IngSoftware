@@ -1,5 +1,5 @@
 Estructura del Backend(borrador):
-https://docs.google.com/document/d/1OOUvaMUS-UwDAb6DC5ELrtkyZfsjGAyP0utw7c9jt5g/edit?usp=sharing
+https://docs.google.com/document/d/11C9mi3S9JeEXuyazEdSgP4wN9haWSFb4aH1OYxnMvHM/edit?usp=sharing
 
 Diagrama de clases:
 https://lucid.app/lucidchart/15c30b3c-fe85-45ae-b12a-e66d24cc3efd/edit?viewport_loc=-3018%2C-1042%2C6842%2C2746%2C0_0&invitationId=inv_3779ee99-fedc-4edc-abc3-7ec5896f3ef1
