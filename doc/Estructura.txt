@@ -99,15 +99,5 @@ src/main/java/com/iot/
 │   └── WaterLevelController.java       
 │         POST /water-level, GET /water-level, GET /water-level/latest
 │
-├── observer/
-│   ├── TelemetryObserver.java          ✅  interface
-│   │     onTelemetryReceived(TelemetryResponseDto)
-│   ├── TelemetrySubject.java           
-│   │     notifyAll(TelemetryResponseDto)
-│   ├── MetricObserver.java             
-│   ├── AlertObserver.java              
-│   └── LiveFeedObserver.java           
-│         getLatestReading()
-│
 └── docs/
       └── openapi.yml                   
