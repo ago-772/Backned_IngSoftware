@@ -1,0 +1,407 @@
+openapi: 3.0.3
+
+info:
+  title: Mate Heater IoT API
+  version: 1.0.0
+  description: REST API for telemetry, events, metrics, alerts and mate sessions.
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Telemetry
+  - name: Events
+  - name: Metrics
+  - name: Sessions
+  - name: Alerts
+  - name: LiveFeed
+
+paths:
+
+  /telemetry:
+    post:
+      tags:
+        - Telemetry
+      summary: Save telemetry reading
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryRequest'
+      responses:
+        '201':
+          description: Telemetry saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - Telemetry
+      summary: Get telemetry history
+      responses:
+        '200':
+          description: Telemetry history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryResponse'
+
+  /telemetry/latest:
+    get:
+      tags:
+        - Telemetry
+      summary: Get latest telemetry
+      responses:
+        '200':
+          description: Latest telemetry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /events:
+    post:
+      tags:
+        - Events
+      summary: Save event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+      responses:
+        '201':
+          description: Event saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+
+    get:
+      tags:
+        - Events
+      summary: Get all events
+      responses:
+        '200':
+          description: Event history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventResponse'
+
+  /events/{id}:
+    get:
+      tags:
+        - Events
+      summary: Get event by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Event found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /events/type/{type}:
+    get:
+      tags:
+        - Events
+      summary: Get events by type
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Events filtered by type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventResponse'
+
+  /metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get all metrics
+      responses:
+        '200':
+          description: Metric history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MetricResponse'
+
+  /metrics/type/{type}:
+    get:
+      tags:
+        - Metrics
+      summary: Get metrics by type
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Metrics filtered by type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MetricResponse'
+
+  /metrics/latest/{type}:
+    get:
+      tags:
+        - Metrics
+      summary: Get latest metric by type
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Latest metric
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricResponse'
+
+  /sessions:
+    get:
+      tags:
+        - Sessions
+      summary: Get session history
+      responses:
+        '200':
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MateSessionResponse'
+
+  /sessions/active:
+    get:
+      tags:
+        - Sessions
+      summary: Get active session
+      responses:
+        '200':
+          description: Active session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MateSessionResponse'
+
+  /sessions/{id}:
+    get:
+      tags:
+        - Sessions
+      summary: Get session by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Session found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MateSessionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /alerts:
+    get:
+      tags:
+        - Alerts
+      summary: Get all alerts
+      responses:
+        '200':
+          description: Alert history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemAlertResponse'
+
+  /alerts/unacknowledged:
+    get:
+      tags:
+        - Alerts
+      summary: Get active alerts
+      responses:
+        '200':
+          description: Unacknowledged alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemAlertResponse'
+
+  /alerts/{id}/acknowledge:
+    patch:
+      tags:
+        - Alerts
+      summary: Acknowledge alert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Alert acknowledged
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /live/telemetry:
+    get:
+      tags:
+        - LiveFeed
+      summary: Live telemetry feed
+      responses:
+        '200':
+          description: Live telemetry stream
+
+components:
+
+  schemas:
+
+    TelemetryRequest:
+      type: object
+      properties:
+        temperature:
+          type: number
+        targetTemperature:
+          type: number
+
+    TelemetryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        temperature:
+          type: number
+        targetTemperature:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+
+    EventRequest:
+      type: object
+      properties:
+        type:
+          type: string
+
+    EventResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    MetricResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        value:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+
+    MateSessionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        totalPours:
+          type: integer
+        averageTemperature:
+          type: number
+        status:
+          type: string
+
+    SystemAlertResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        alertType:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+        triggeredAt:
+          type: string
+          format: date-time
+        acknowledged:
+          type: boolean
+
+  responses:
+
+    BadRequest:
+      description: Invalid request payload
+
+    NotFound:
+      description: Resource not found
+
+    InternalServerError:
+      description: Internal server error
