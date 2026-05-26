@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: Mate API
+  version: 1.0.0
+
+paths:
+  /telemetry:
+    post:
+      summary: Receive telemetry reading from ESP32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryRequest'
+      responses:
+        '201':
+          description: Reading saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryResponse'
+        '400':
+          description: Invalid payload
+
+    get:
+      summary: Get all telemetry readings
+      responses:
+        '200':
+          description: List of readings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TelemetryResponse'
+
+components:
+  schemas:
+    TelemetryRequest:
+      type: object
+      required:
+        - temperature
+        - targetTemperature
+        - waterLevel
+        - createdAt
+      properties:
+        temperature:
+          type: number
+          minimum: 0.0
+          maximum: 100.0
+        targetTemperature:
+          type: number
+          minimum: 10.0
+          maximum: 100.0
+        waterLevel:
+          type: number
+          minimum: 0.0
+          maximum: 100.0
+        createdAt:
+          type: string
+          format: date-time
+
+    TelemetryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        temperature:
+          type: number
+        targetTemperature:
+          type: number
+        waterLevel:
+          type: number
+        createdAt:
+          type: string
+          format: date-time

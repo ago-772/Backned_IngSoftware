@@ -32,7 +32,7 @@ public class TelemetryEntity {
     // Unique identifier generated automatically by the database
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // Current water temperature measured by the sensor
     @Column(name = "temperature", nullable = false)
@@ -50,5 +50,5 @@ public class TelemetryEntity {
     // Timestamp automatically generated when the reading is stored
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant timestamp;
+    private Instant createdAt;
 }

@@ -1,0 +1,11 @@
+package com.iot.models.enums;
+
+public enum MetricType {
+    COOLING_RATE,
+    CEBADO_FREQUENCY,
+    TEMPERATURE_ALERT,
+    SESSION_AVG_TEMPERATURE,
+    SESSION_BREW_COUNT,
+    BREW_INTERVAL,
+    TEMP_DROP_PREDICTION
+}
