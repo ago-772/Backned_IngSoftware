@@ -23,7 +23,7 @@ Second state is that the water is boiling (telemetry)
 "idMateSession": 105,
 "temperature": 30,
 "levelWater" : 70,
-"typeEvent": "TELEMTRY"
+"typeEvent": "TELEMETRY"
 } 
 
 Just I return 200 Ok "Keep working"
