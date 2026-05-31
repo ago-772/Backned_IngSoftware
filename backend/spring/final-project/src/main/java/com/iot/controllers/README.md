@@ -8,10 +8,7 @@ Encargado de manejar los datos de telemetría (temperatura).
 
 ## EventController
 Encargado de manejar los eventos del dispositivo 
-- **POST /api/events** — recibe eventos desde ESP32
-- **GET /api/events**  — historial de eventos para frontend
+- **POST /api/events — recibe eventos desde ESP32
+- **GET /api/events — devuelve el historial de eventos
+- **GET /api/events/latest — devuelve el evento más reciente
 
-## MetricsController
-Encargado de exponer métricas del sistema. 
-- **GET /api/metrics/cooling-curve**  — curva de enfriamiento
-- **GET /api/metrics/frequency**  — frecuencia de cebados
