@@ -35,6 +35,19 @@ paths:
                 items:
                   $ref: '#/components/schemas/TelemetryResponse'
 
+  /telemetry/latest:
+    get:
+      summary: Get the most recent telemetry reading
+      responses:
+        '200':
+          description: Latest reading
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryResponse'
+        '404':
+          description: No readings found
+
 components:
   schemas:
     TelemetryRequest:
