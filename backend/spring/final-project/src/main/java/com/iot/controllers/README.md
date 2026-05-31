@@ -4,7 +4,7 @@
 Encargado de manejar los datos de telemetría (temperatura). 
 - **POST /api/telemetry** — recibe datos desde ESP32
 - **GET /api/telemetry**  — Devuelve el historial de telemetría. 
-- **GET /api/telemetry/live**  — Devuelve el último dato registrado (tiempo real) 
+- **GET /api/telemetry/latest**  — Devuelve la lectura más reciente
 
 ## EventController
 Encargado de manejar los eventos del dispositivo 
