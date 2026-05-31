@@ -38,4 +38,12 @@ public class TelemetryController {
         List<TelemetryResponseDto> response = telemetryService.findAll();
         return ResponseEntity.ok(response);
     }
+
+    // Frontend → backend: returns the most recent telemetry reading
+    @GetMapping("/latest")
+    public ResponseEntity<TelemetryResponseDto> getLatest() {
+        return telemetryService.findLatest()
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
 }
