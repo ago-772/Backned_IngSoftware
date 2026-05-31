@@ -1,0 +1,68 @@
+# ~~~~~~~~~~~~ telemetry ~~~~~~~~~~~~
+
+# ===== REQUESTS =====
+
+TelemetryRequest:
+  temperature: number         # 0.0 – 100.0
+  targetTemperature: number   # 10.0 – 90.0
+  waterLevel: number          # 0.0 – 100.0
+
+# ===== RESPONSES =====
+
+TelemetryResponse:
+  id: number
+  temperature: number
+  targetTemperature: number
+  waterLevel: number
+  createdAt: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
+
+# ===== ENDPOINTS =====
+
+# POST /telemetry → 201 | 400
+PostTelemetry:
+  body: TelemetryRequest
+  returns: TelemetryResponse
+
+# GET /telemetry → 200
+GetTelemetry:
+  returns: TelemetryResponse[]
+
+# GET /telemetry/latest → 200 | 404
+GetLatestTelemetry:
+  returns: TelemetryResponse | null
+
+# ~~~~~~~~~~~~ Event ~~~~~~~~~~~~
+
+  # ===== REQUESTS =====
+
+EventRequest:
+  type: EventType             # requerido
+
+EventType:
+  - SYSTEM_STOPPED
+  - SYSTEM_STARTED
+  - HEATING_STARTED
+  - HEATING_STOPPED
+
+# ===== RESPONSES =====
+
+EventResponse:
+  id: number
+  type: EventType
+  timestamp: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
+  deviceId: string
+
+# ===== ENDPOINTS =====
+
+# POST /events → 201 | 400
+PostEvent:
+  body: EventRequest
+  returns: EventResponse
+
+# GET /events → 200
+GetEvents:
+  returns: EventResponse[]
+
+# GET /events/latest → 200 | 404
+GetLatestEvent:
+  returns: EventResponse | null

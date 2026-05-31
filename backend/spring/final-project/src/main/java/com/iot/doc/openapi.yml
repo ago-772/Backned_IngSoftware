@@ -1,9 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Mate API
+  title: IoT API
   version: 1.0.0
 
 paths:
+
+  # ===== TELEMETRY =====
+
   /telemetry:
     post:
       summary: Receive telemetry reading from ESP32
@@ -48,15 +51,63 @@ paths:
         '404':
           description: No readings found
 
+  # ===== EVENTS =====
+
+  /events:
+    post:
+      summary: Receive discrete event from ESP32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+      responses:
+        '201':
+          description: Event saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '400':
+          description: Invalid payload
+
+    get:
+      summary: Get all events ordered by most recent first
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventResponse'
+
+  /events/latest:
+    get:
+      summary: Get the most recent event
+      responses:
+        '200':
+          description: Latest event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+        '404':
+          description: No events found
+
 components:
   schemas:
+
+    # ===== TELEMETRY SCHEMAS =====
+
     TelemetryRequest:
       type: object
       required:
         - temperature
         - targetTemperature
         - waterLevel
-        - createdAt
       properties:
         temperature:
           type: number
@@ -64,15 +115,12 @@ components:
           maximum: 100.0
         targetTemperature:
           type: number
-          minimum: 10.0
-          maximum: 100.0
+          minimum: 50.0
+          maximum: 90.0
         waterLevel:
           type: number
           minimum: 0.0
           maximum: 100.0
-        createdAt:
-          type: string
-          format: date-time
 
     TelemetryResponse:
       type: object
@@ -88,3 +136,34 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    # ===== EVENT SCHEMAS =====
+
+    EventRequest:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#/components/schemas/EventType'
+
+    EventResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          $ref: '#/components/schemas/EventType'
+        timestamp:
+          type: string
+          format: date-time
+        deviceId:
+          type: string
+
+    EventType:
+      type: string
+      enum:
+        - EATING_STARTED
+        - HEATING_STOPPED
+        - SYSTEM_STARTED
+        - SYSTEM_STOPPED
