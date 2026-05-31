@@ -4,7 +4,6 @@ interface TelemetryRequest {
   temperature: number;        // 0.0 – 100.0
   targetTemperature: number;  // 10.0 – 100.0
   waterLevel: number;         // 0.0 – 100.0
-  createdAt: string;          // ISO 8601, ej: "2026-05-31T12:00:00Z"
 }
 
 // ===== RESPONSES =====
@@ -14,7 +13,7 @@ interface TelemetryResponse {
   temperature: number;
   targetTemperature: number;
   waterLevel: number;
-  createdAt: string;
+  createdAt: string;           // ISO 8601, ej: "2026-05-31T12:00:00Z"
 }
 
 // ===== ENDPOINTS =====
