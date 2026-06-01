@@ -1,12 +1,14 @@
 package com.iot.models.entities;
 
-import jakarta.persistence.Column;
+import com.iot.models.enums.SessionType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 
 import jakarta.persistence.GeneratedValue;
@@ -36,9 +38,15 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MateSessionEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //Type of system status
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false,length = 64)
+    private SessionType sessionType;
 
     //Total number of pours (button presses) detected during this session.
     @Column(name = "total_pours", nullable = false)
