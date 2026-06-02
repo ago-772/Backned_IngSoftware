@@ -38,6 +38,10 @@ public class MetricEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // FK to the session this metric belongs to
+    @Column(name = "session_id", nullable = false)
+    private Long sessionId;
+
     //Type of metric calculated by the backend algorithms.
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 64)

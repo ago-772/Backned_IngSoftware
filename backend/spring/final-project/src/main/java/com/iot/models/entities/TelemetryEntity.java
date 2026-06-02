@@ -34,11 +34,11 @@ public class TelemetryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FK a la sesión activa cuando se registró esta lectura
+    //Identifier of the active session
     @Column(name = "session_id")
     private Long sessionId;
 
-    // Current water temperature measured by the sensor
+    //Current water temperature measured by the sensor
     @Column(name = "temperature", nullable = false)
     private Double temperature;
 
@@ -46,12 +46,12 @@ public class TelemetryEntity {
     @Column(name = "target_temperature", nullable = false)
     private Double targetTemperature;
 
-    // Current water level percentage detected by the sensor
+    //Current water level percentage detected by the sensor
     // %[0, 100]
     @Column(name = "water_level", nullable = false)
     private Double waterLevel;
 
-    // Timestamp automatically generated when the reading is stored
+    //Timestamp automatically generated when the reading is stored
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
