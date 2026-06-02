@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Service 
 public class EventService {
 
     private final EventRepository eventRepository;
@@ -40,74 +40,17 @@ public class EventService {
                 .toList();
     }  
 
-    /**
-     * Returns all events of a given type ordered by most recent first.
-     * Used to list brew history or heating state changes in the frontend.
-     */
+    /** Returns the latest event. */
     @Transactional(readOnly = true)
-    public List<EventResponseDto> findByType(EventType type) {
-        return eventRepository.findByTypeOrderByTimestampDesc(type)
-                .stream()
-                .map(EventResponseDto::fromEntity)
-                .toList();
-    }
+    public EventResponseDto findLatest() {
 
-    /**
-     * Returns the most recent event of a given type.
-     * Used to infer current system state (e.g. is heating active?).
-     */
-    @Transactional(readOnly = true)
-    public Optional<EventResponseDto> findLatestByType(EventType type) {
-        return eventRepository.findTopByTypeOrderByTimestampDesc(type)
-                .map(EventResponseDto::fromEntity);
-    }
+        Optional<EventEntity> entityOptional = eventRepository.findTopByOrderByTimestampDesc();
 
-    /**
-     * Returns the total count of events of a given type.
-     * Used for brew count display in the frontend.
-     */
-    @Transactional(readOnly = true)
-    public long countByType(EventType type) {
-        return eventRepository.countByType(type);
-    }
+        if (entityOptional.isPresent()) {
+            EventEntity entity = entityOptional.get();
+            return EventResponseDto.fromEntity(entity);
+        }
 
-
-/* 
-    public EventResponseDto save(EventRequestDto dto) {
-        EventEntity entity = EventEntity.builder()
-                .deviceId(dto.getDeviceId())
-                .type(dto.getType())
-                .build();
-        return toDto(eventRepository.save(entity));
-    }
-
-    public List<EventResponseDto> getHistory(String deviceId, Instant from, Instant to) {
-        return eventRepository
-                .findByDeviceIdAndCreatedAtBetweenOrderByCreatedAtAsc(deviceId, from, to)
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<EventResponseDto> getAllByDevice(String deviceId) {
-        return eventRepository
-                .findByDeviceIdOrderByCreatedAtDesc(deviceId)
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public long countByType(String deviceId, EventType type) {
-        return eventRepository.countByDeviceIdAndType(deviceId, type);
-    }
-
-    private EventResponseDto toDto(EventEntity entity) {
-        return EventResponseDto.builder()
-                .id(entity.getId())
-                .deviceId(entity.getDeviceId())
-                .type(entity.getType())
-                .createdAt(entity.getCreatedAt())
-                .build();
-    }
-*/
+    throw new RuntimeException("No events found");
+}
 }
