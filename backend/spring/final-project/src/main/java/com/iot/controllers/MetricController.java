@@ -43,4 +43,5 @@ public class MetricController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 }
