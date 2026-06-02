@@ -1,14 +1,18 @@
-# ~~~~~~~~~~~~ telemetry ~~~~~~~~~~~~
+# ============================================================
+#  API CONTRACT  –  IoT Mate Device
+# ============================================================
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# TELEMETRY
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ===== REQUESTS =====
-
 TelemetryRequest:
   temperature: number         # 0.0 – 100.0
   targetTemperature: number   # 10.0 – 90.0
   waterLevel: number          # 0.0 – 100.0
 
 # ===== RESPONSES =====
-
 TelemetryResponse:
   id: number
   temperature: number
@@ -17,7 +21,6 @@ TelemetryResponse:
   createdAt: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
 
 # ===== ENDPOINTS =====
-
 # POST /telemetry → 201 | 400
 PostTelemetry:
   body: TelemetryRequest
@@ -31,10 +34,12 @@ GetTelemetry:
 GetLatestTelemetry:
   returns: TelemetryResponse | null
 
-# ~~~~~~~~~~~~ Event ~~~~~~~~~~~~
 
-  # ===== REQUESTS =====
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# EVENTS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# ===== REQUESTS =====
 EventRequest:
   type: EventType             # requerido
 
@@ -45,7 +50,6 @@ EventType:
   - HEATING_STOPPED
 
 # ===== RESPONSES =====
-
 EventResponse:
   id: number
   type: EventType
@@ -53,7 +57,6 @@ EventResponse:
   deviceId: string
 
 # ===== ENDPOINTS =====
-
 # POST /events → 201 | 400
 PostEvent:
   body: EventRequest
@@ -66,3 +69,38 @@ GetEvents:
 # GET /events/latest → 200 | 404
 GetLatestEvent:
   returns: EventResponse | null
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# MATE SESSION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ===== REQUESTS =====
+MateSessionRequest:
+  sessionType: SessionType    # requerido
+  totalPours: number | null   # opcional, cantidad de cebadas de la sesión
+
+SessionType:
+  - SYSTEM_STARTED
+  - SYSTEM_STOPPED
+
+# ===== RESPONSES =====
+MateSessionResponse:
+  id: number
+  sessionType: SessionType
+  totalPours: number | null
+  createdAt: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
+
+# ===== ENDPOINTS =====
+# POST /sessions → 201 | 400
+PostMateSession:
+  body: MateSessionRequest
+  returns: MateSessionResponse
+
+# GET /sessions → 200
+GetMateSessions:
+  returns: MateSessionResponse[]
+
+# GET /sessions/latest → 200 | 404
+GetLatestMateSession:
+  returns: MateSessionResponse | null
