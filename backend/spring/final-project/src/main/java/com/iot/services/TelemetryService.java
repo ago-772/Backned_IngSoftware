@@ -5,6 +5,7 @@ import com.iot.models.dto.TelemetryResponseDto;
 import com.iot.models.entities.TelemetryEntity;
 import com.iot.repositories.TelemetryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,18 +43,31 @@ public class TelemetryService {
     // Returns all telemetry readings
     @Transactional(readOnly = true)
     public List<TelemetryResponseDto> findAll() {
-        return telemetryRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"))
-                .stream()
-                .map(TelemetryResponseDto::fromEntity)
-                .toList();
-    }
+        List<TelemetryEntity> entities = telemetryRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
+        
+        List<TelemetryResponseDto> resultado = new ArrayList<>();
+
+        for (TelemetryEntity entity : entities) {
+            TelemetryResponseDto dto = TelemetryResponseDto.fromEntity(entity);
+            resultado.add(dto);
+        }
+
+    return resultado;
+    } 
 
     //Returns the most recent telemetry reading
-     @Transactional(readOnly = true)
-    public Optional<TelemetryResponseDto> findLatest() {
-        return telemetryRepository
-                .findTopByOrderByTimestampDesc()
-                .map(TelemetryResponseDto::fromEntity);
-    }
+    @Transactional(readOnly = true)
+        public Optional<TelemetryResponseDto> findLatest() {
+
+        Optional<TelemetryEntity> entityOptional = telemetryRepository.findTopByOrderByTimestampDesc();
+
+        if (entityOptional.isPresent()) {
+            TelemetryEntity entity = entityOptional.get();
+            TelemetryResponseDto dto = TelemetryResponseDto.fromEntity(entity);
+            return Optional.of(dto);
+        }
+
+        return Optional.empty();
+}
 
 }
