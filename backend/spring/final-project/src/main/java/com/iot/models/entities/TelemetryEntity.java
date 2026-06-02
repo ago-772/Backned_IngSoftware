@@ -34,6 +34,10 @@ public class TelemetryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // FK a la sesión activa cuando se registró esta lectura
+    @Column(name = "session_id")
+    private Long sessionId;
+
     // Current water temperature measured by the sensor
     @Column(name = "temperature", nullable = false)
     private Double temperature;
