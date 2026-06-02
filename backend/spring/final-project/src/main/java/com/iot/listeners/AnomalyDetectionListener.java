@@ -33,9 +33,13 @@ public class AnomalyDetectionListener implements SessionObserver {
 
         if (readings.isEmpty()) return;
 
-        long anomalyCount = readings.stream()
-            .filter(r -> r.getTemperature() > r.getTargetTemperature() + THRESHOLD)
-            .count();
+    long anomalyCount = 0;
+
+    for (TelemetryEntity reading : readings) {
+        if (reading.getTemperature() > reading.getTargetTemperature() + THRESHOLD) {
+            anomalyCount++;
+        }
+    }   
 
         MetricEntity metric = MetricEntity.builder()
             .sessionId(event.getSessionId())
