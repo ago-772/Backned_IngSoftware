@@ -3,7 +3,6 @@ package com.iot.services;
 import com.iot.models.dto.EventRequestDto;
 import com.iot.models.dto.EventResponseDto;
 import com.iot.models.entities.EventEntity;
-import com.iot.models.enums.EventType;
 import com.iot.repositories.EventRepository;
 import org.springframework.data.domain.Sort;
 import java.util.List;
