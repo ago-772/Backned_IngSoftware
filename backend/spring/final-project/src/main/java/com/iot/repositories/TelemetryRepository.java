@@ -12,3 +12,4 @@ public interface TelemetryRepository extends JpaRepository<TelemetryEntity, Long
     Optional<TelemetryEntity> findTopByOrderByTimestampDesc();
     List<TelemetryEntity> findBySessionId(Long sessionId);
 }
+ 
