@@ -25,7 +25,7 @@ public class TelemetryRequestDto {
 
     //Target temperature set via the potentiometer.
     @NotNull
-    @DecimalMin("50.0") @DecimalMax("90.0")
+    @DecimalMin("10.0") @DecimalMax("90.0")
     private Double targetTemperature;
     
     @NotNull

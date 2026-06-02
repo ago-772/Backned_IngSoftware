@@ -18,6 +18,7 @@ public class TelemetryResponseDto {
     private Double targetTemperature;
     private Double waterLevel;
     private Instant createdAt;
+    private Long sessionId;
 
     public static TelemetryResponseDto fromEntity(TelemetryEntity entity) {
 
@@ -27,6 +28,7 @@ public class TelemetryResponseDto {
                 .targetTemperature(entity.getTargetTemperature())
                 .waterLevel(entity.getWaterLevel())
                 .createdAt(entity.getCreatedAt())
+                .sessionId(entity.getSessionId())
                 .build();
     }
 }
