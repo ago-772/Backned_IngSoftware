@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Business logic for ingesting and listing sensor readings.
  * 
- * <p>Persists via {@link SensorsRepository} and returns {@link SensorResponseDto} only — never JPA entities.
+ * <p>Persists via {@link TelemetryRepository} and returns {@link TelemetryResponseDto} only — never JPA entities.
  */
 @Service
 public class TelemetryService {
@@ -59,7 +59,7 @@ public class TelemetryService {
     @Transactional(readOnly = true)
         public Optional<TelemetryResponseDto> findLatest() {
 
-        Optional<TelemetryEntity> entityOptional = telemetryRepository.findTopByOrderByTimestampDesc();
+        Optional<TelemetryEntity> entityOptional = telemetryRepository.findTopByOrderByCreatedAtDesc();
 
         if (entityOptional.isPresent()) {
             TelemetryEntity entity = entityOptional.get();

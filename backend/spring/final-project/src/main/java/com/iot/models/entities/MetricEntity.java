@@ -57,5 +57,5 @@ public class MetricEntity {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant timestamp;
+    private Instant createdAt;
 }

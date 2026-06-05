@@ -43,15 +43,9 @@ public class EventController {
         return ResponseEntity.ok(eventService.findAll());
     }
 
-    /** Returns all events of a given type ordered by most recent first. */
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<EventResponseDto>> findByType(@PathVariable EventType type) {
-        return ResponseEntity.ok(eventService.findByType(type));
-    }
-
-    /** Returns the total count of events of a given type. */
-    @GetMapping("/count/{type}")
-    public ResponseEntity<Long> countByType(@PathVariable EventType type) {
-        return ResponseEntity.ok(eventService.countByType(type));
+    /* Return the last event ordered */
+    @GetMapping("/latest")
+    public EventResponseDto findLatest() {
+        return eventService.findLatest();
     }
 }

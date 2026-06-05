@@ -30,7 +30,7 @@ public class MetricResponseDto {
                 .type(entity.getType())
                 .value(entity.getValue())
                 .unit(entity.getUnit())
-                .createdAt(entity.getTimestamp()) 
+                .createdAt(entity.getCreatedAt())
                 .build();
     }
 }

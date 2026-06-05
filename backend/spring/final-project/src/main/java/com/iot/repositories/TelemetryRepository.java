@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface TelemetryRepository extends JpaRepository<TelemetryEntity, Long> {
 
-    Optional<TelemetryEntity> findTopByOrderByTimestampDesc();
+    Optional<TelemetryEntity> findTopByOrderByCreatedAtDesc();
     List<TelemetryEntity> findBySessionId(Long sessionId);
 }
  

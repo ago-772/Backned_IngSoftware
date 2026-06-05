@@ -51,5 +51,7 @@ public class EventService {
         }
 
     throw new RuntimeException("No events found");
-}
+
+    }
+
 }
