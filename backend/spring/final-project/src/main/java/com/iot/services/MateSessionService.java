@@ -1,5 +1,6 @@
 package com.iot.services;
 
+import com.iot.models.dto.TelemetryResponseDto;
 import com.iot.observer.SessionObserver;
 import com.iot.observer.SessionClosedEvent;
 import com.iot.models.dto.MateSessionRequestDto;
@@ -8,18 +9,23 @@ import com.iot.models.entities.MateSessionEntity;
 import com.iot.models.enums.SessionType;
 import com.iot.repositories.MateSessionRepository;
 
+import lombok.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MateSessionService {
 
-    private final MateSessionRepository repository;
+    private final MateSessionRepository mateSessionRepository;
     private final List<SessionObserver> observers = new ArrayList<>();
 
     public MateSessionService(MateSessionRepository repository) {
-        this.repository = repository;
+        this.mateSessionRepository = repository;
     }
  
     // ── SessionSubject ──────────────────────────────────────────
@@ -42,22 +48,45 @@ public class MateSessionService {
     }
 
     // ── lógica de negocio ───────────────────────────────────────
-
+        @Transactional
     public MateSessionResponseDto create(MateSessionRequestDto request) {
-        MateSessionEntity entity = MateSessionEntity.builder()
-                .sessionType(request.getSessionType())
-                .totalPours(request.getTotalPours())
-                .build();
+        Optional<MateSessionEntity> entityOptional = mateSessionRepository.findFirstBySessionType(SessionType.SYSTEM_STARTED);
 
-        // Persist the entity (postgress)
-        MateSessionEntity saved = repository.save(entity);
+        if(entityOptional.isEmpty()) {
+            MateSessionEntity entity = MateSessionEntity.builder()
+                    .sessionType(request.getSessionType())
+                    .totalPours(request.getTotalPours())
+                    .build();
 
-        // Notify observers when the system is stopped
-        if (SessionType.SYSTEM_STOPPED.equals(saved.getSessionType())) {
-            notifyObservers(new SessionClosedEvent(saved.getId()));
+            // Persist the entity (postgress)
+            MateSessionEntity saved = mateSessionRepository.save(entity);
+            /*
+            // Notify observers when the system is stopped
+            if (SessionType.SYSTEM_STOPPED.equals(saved.getSessionType())) {
+                notifyObservers(new SessionClosedEvent(saved.getId()));
+            }
+            */
+            // Convert entity to response DTO
+            return MateSessionResponseDto.fromEntity(saved);
         }
+        else{
+            throw new RuntimeException("Session already exists");
+        }
+    }
 
-        // Convert entity to response DTO
-        return MateSessionResponseDto.fromEntity(saved);
+    @Transactional
+    public void finishSession (@NonNull MateSessionRequestDto dto) {
+        Optional<MateSessionEntity> entityOptional = mateSessionRepository.findFirstBySessionType(SessionType.SYSTEM_STARTED);
+
+        if(entityOptional.isPresent()) {
+            entityOptional.get().setTotalPours(dto.getTotalPours());
+            entityOptional.get().setSessionType(SessionType.SYSTEM_STOPPED);
+            mateSessionRepository.save(entityOptional.get());
+
+        }
+        else{
+            throw new IllegalStateException("No active mate session found.");
+
+        }
     }
 }

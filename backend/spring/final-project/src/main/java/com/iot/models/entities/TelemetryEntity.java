@@ -1,11 +1,7 @@
 package com.iot.models.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +31,9 @@ public class TelemetryEntity {
     private Long id;
 
     //Identifier of the active session
-    @Column(name = "session_id")
-    private Long sessionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "session_id", nullable = false)
+    private MateSessionEntity sessionId; // Hacemos referencia a la entidad completa, no solo al número
 
     //Current water temperature measured by the sensor
     @Column(name = "temperature", nullable = false)

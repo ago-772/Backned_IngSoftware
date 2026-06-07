@@ -28,7 +28,7 @@ public class TelemetryResponseDto {
                 .targetTemperature(entity.getTargetTemperature())
                 .waterLevel(entity.getWaterLevel())
                 .createdAt(entity.getCreatedAt())
-                .sessionId(entity.getSessionId())
+                .sessionId(entity.getSessionId().getId())
                 .build();
     }
 }
