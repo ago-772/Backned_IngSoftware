@@ -37,7 +37,7 @@ public class TelemetryEntity {
   // Identifier of the active session
   private MateSessionEntity
       sessionId; // Hacemos referencia a la entidad completa, no solo al número
- 
+
   // Current water temperature measured by the sensor
   @Column(name = "temperature", nullable = false)
   private Double temperature;
