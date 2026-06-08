@@ -1,6 +1,6 @@
 package com.iot.models.enums;
 
 public enum MetricType {
-    AVERAGE_TEMPERATURE,
-    ANOMALY_COUNT
+  AVERAGE_TEMPERATURE,
+  ANOMALY_COUNT
 }
