@@ -20,9 +20,10 @@ public class MateSessionService {
   private final MateSessionRepository mateSessionRepository;
   private final List<SessionObserver> observers = new ArrayList<>();
 
-  public MateSessionService(MateSessionRepository repository) {
+  public MateSessionService(MateSessionRepository repository, List<SessionObserver> observers) {
     this.mateSessionRepository = repository;
-  }
+    this.observers.addAll(observers);
+  } 
 
   // ── SessionSubject ──────────────────────────────────────────
 
@@ -58,12 +59,7 @@ public class MateSessionService {
 
       // Persist the entity (postgress)
       MateSessionEntity saved = mateSessionRepository.save(entity);
-      /*
-      // Notify observers when the system is stopped
-      if (SessionType.SYSTEM_STOPPED.equals(saved.getSessionType())) {
-          notifyObservers(new SessionClosedEvent(saved.getId()));
-      }
-      */
+      
       // Convert entity to response DTO
       return MateSessionResponseDto.fromEntity(saved);
     } else {
@@ -77,9 +73,13 @@ public class MateSessionService {
         mateSessionRepository.findFirstBySessionType(SessionType.SYSTEM_STARTED);
 
     if (entityOptional.isPresent()) {
-      entityOptional.get().setTotalPours(dto.getTotalPours());
-      entityOptional.get().setSessionType(SessionType.SYSTEM_STOPPED);
-      mateSessionRepository.save(entityOptional.get());
+      MateSessionEntity session = entityOptional.get();
+      session.setTotalPours(dto.getTotalPours());
+      session.setSessionType(SessionType.SYSTEM_STOPPED);
+
+      MateSessionEntity saved = mateSessionRepository.save(session);
+
+      notifyObservers(new SessionClosedEvent(saved.getId()));
 
     } else {
       throw new IllegalStateException("No active mate session found.");
