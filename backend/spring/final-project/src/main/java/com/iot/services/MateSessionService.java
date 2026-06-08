@@ -5,6 +5,7 @@ import com.iot.models.dto.MateSessionResponseDto;
 import com.iot.models.entities.MateSessionEntity;
 import com.iot.models.enums.SessionType;
 import com.iot.observer.SessionClosedEvent;
+import org.springframework.data.domain.Sort;
 import com.iot.observer.SessionObserver;
 import com.iot.repositories.MateSessionRepository;
 import java.util.ArrayList;
@@ -84,5 +85,22 @@ public class MateSessionService {
     } else {
       throw new IllegalStateException("No active mate session found.");
     }
+  }
+
+   @Transactional(readOnly = true)
+  public List<MateSessionResponseDto> findAll() {
+    return mateSessionRepository
+        .findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+        .stream()
+        .map(MateSessionResponseDto::fromEntity)
+        .toList();
+  }
+ 
+  /** Returns the most recent session, or empty if none exist. */
+  @Transactional(readOnly = true)
+  public Optional<MateSessionResponseDto> findLatest() {
+    return mateSessionRepository
+        .findTopByOrderByTimestampDesc()
+        .map(MateSessionResponseDto::fromEntity);
   }
 }

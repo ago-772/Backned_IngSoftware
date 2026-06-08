@@ -4,6 +4,7 @@ import com.iot.models.dto.MateSessionRequestDto;
 import com.iot.models.dto.MateSessionResponseDto;
 import com.iot.services.MateSessionService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /** REST controller for mate session lifecycle events sent by the ESP32. */
 @RestController
-@RequestMapping("/api/v1/sessions")
+@RequestMapping("/sessions")
 @RequiredArgsConstructor
 public class MateSessionController {
 
@@ -39,5 +40,19 @@ public class MateSessionController {
     mateSessionService.finishSession(dto);
 
     return ResponseEntity.ok().build();
+  }
+
+    @GetMapping
+  public ResponseEntity<List<MateSessionResponseDto>> findAll() {
+    return ResponseEntity.ok(mateSessionService.findAll());
+  }
+ 
+  /** Returns the most recent session. */
+  @GetMapping("/latest")
+  public ResponseEntity<MateSessionResponseDto> findLatest() {
+    return mateSessionService
+        .findLatest()
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 }
