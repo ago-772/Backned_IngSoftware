@@ -14,23 +14,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MetricResponseDto {
 
-    private Integer id;
-    private MetricType type;
-    private Double value;
-    private String unit;
-    private Instant createdAt; // Mantenemos este nombre en el DTO si lo prefieres para el frontend
+  private Integer id;
+  private MetricType type;
+  private Double value;
+  private String unit;
+  private Instant createdAt; // Mantenemos este nombre en el DTO si lo prefieres para el frontend
 
-    public static MetricResponseDto fromEntity(MetricEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-        
-        return MetricResponseDto.builder()
-                .id(entity.getId())
-                .type(entity.getType())
-                .value(entity.getValue())
-                .unit(entity.getUnit())
-                .createdAt(entity.getCreatedAt())
-                .build();
+  public static MetricResponseDto fromEntity(MetricEntity entity) {
+    if (entity == null) {
+      return null;
     }
+
+    return MetricResponseDto.builder()
+        .id(entity.getId())
+        .type(entity.getType())
+        .value(entity.getValue())
+        .unit(entity.getUnit())
+        .createdAt(entity.getCreatedAt())
+        .build();
+  }
 }
