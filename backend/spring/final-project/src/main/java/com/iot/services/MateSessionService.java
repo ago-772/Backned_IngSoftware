@@ -23,7 +23,7 @@ public class MateSessionService {
   public MateSessionService(MateSessionRepository repository, List<SessionObserver> observers) {
     this.mateSessionRepository = repository;
     this.observers.addAll(observers);
-  } 
+  }
 
   // ── SessionSubject ──────────────────────────────────────────
 
@@ -59,7 +59,7 @@ public class MateSessionService {
 
       // Persist the entity (postgress)
       MateSessionEntity saved = mateSessionRepository.save(entity);
-      
+
       // Convert entity to response DTO
       return MateSessionResponseDto.fromEntity(saved);
     } else {

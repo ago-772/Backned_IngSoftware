@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "3.5.11"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.asciidoctor.jvm.convert") version "4.0.5"
+	id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "com.software.engineering"
@@ -86,4 +87,13 @@ tasks.test {
 tasks.asciidoctor {
 	inputs.dir(project.extra["snippetsDir"]!!)
 	dependsOn(tasks.test)
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
