@@ -19,13 +19,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+   
 @ExtendWith(MockitoExtension.class)
 class AverageTemperatureListenerTest {
 
-  // Mocks
+  // Mock del repositorio de telemetría: simula la BD devolviendo lecturas controladas
   @Mock private TelemetryRepository telemetryRepository;
 
+  // Mock del repositorio de métricas: capturamos qué se intenta guardar
   @Mock private MetricRepository metricRepository;
 
   // Subject under test
@@ -38,7 +39,7 @@ class AverageTemperatureListenerTest {
    * persists a MetricEntity with the right type, value, and session ID.
    */
   @Test
-  void onSessionClosed_computesCorrectAverageAndPersistsMetric() {
+  void onSessionClosed_Average() {
 
     // Define a fake session ID and create the event that the listener will receive.
     Long sessionId = 10L;
@@ -49,7 +50,9 @@ class AverageTemperatureListenerTest {
         List.of(
             buildReading(60.0, 80.0, sessionId),
             buildReading(80.0, 80.0, sessionId),
-            buildReading(100.0, 80.0, sessionId));
+            buildReading(70.0, 80.0, sessionId),
+            buildReading(90.0, 80.0, sessionId),
+            buildReading(50.0, 80.0, sessionId));
 
     // Stub the repository to return the prepared readings for the given session.
     when(telemetryRepository.findBySessionId(sessionId)).thenReturn(readings);
@@ -57,6 +60,7 @@ class AverageTemperatureListenerTest {
     // Stub save() to return the same entity it receives, simulating real JPA behavior.
     when(metricRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
+    // Act
     listener.onSessionClosed(event);
 
     // Capture the MetricEntity passed to save() and verify it was called exactly once.
@@ -66,7 +70,7 @@ class AverageTemperatureListenerTest {
     // Retrieve the captured entity and assert it has the correct type, value, and session ID.
     MetricEntity saved = captor.getValue();
     assertThat(saved.getType()).isEqualTo(MetricType.AVERAGE_TEMPERATURE);
-    assertThat(saved.getValue()).isEqualTo(80.0);
+    assertThat(saved.getValue()).isEqualTo(70.0);
     assertThat(saved.getSessionId()).isEqualTo(sessionId);
   }
 

@@ -1,0 +1,22 @@
+name: CI
+
+permissions:
+  contents: read #Recommended settings to ensure proper operation
+
+# Triggers only on pull requests targeting main
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run build action
+        uses: ./.github/actions/build
+

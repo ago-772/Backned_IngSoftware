@@ -50,9 +50,12 @@ class AnomalyDetectionListenerTest {
     // Simulate three readings: one anomaly, one on the boundary, one normal.
     List<TelemetryEntity> readings =
         List.of(
-            buildReading(90.0, 80.0, sessionId),
-            buildReading(84.0, 80.0, sessionId),
-            buildReading(70.0, 80.0, sessionId));
+        buildReading(90.0, 80.0, sessionId),  // anomalía
+        buildReading(84.0, 80.0, sessionId),  // límite exacto → NO anomalía
+        buildReading(70.0, 80.0, sessionId),  // normal
+        buildReading(75.0, 70.0, sessionId), // límite exacto con target distinto → NO anomalía
+        buildReading(75.1, 70.0, sessionId)); // anomalía
+
 
     // Stub the repository to return the prepared readings for the given session.
     when(telemetryRepository.findBySessionId(sessionId)).thenReturn(readings);
@@ -70,7 +73,7 @@ class AnomalyDetectionListenerTest {
     // Retrieve the captured entity and assert it has the correct type, value, and session ID.
     MetricEntity saved = captor.getValue();
     assertThat(saved.getType()).isEqualTo(MetricType.ANOMALY_COUNT);
-    assertThat(saved.getValue()).isEqualTo(1.0);
+    assertThat(saved.getValue()).isEqualTo(2.0);
     assertThat(saved.getSessionId()).isEqualTo(sessionId);
   }
 

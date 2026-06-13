@@ -1,0 +1,30 @@
+name: Build
+description: Compiles the project and verifies there are no errors. Does not generate a JAR or upload artifacts.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('backend/spring/final-project/**/*.gradle*', 'backend/spring/final-project/**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Make gradlew executable
+      shell: bash
+      run: chmod +x backend/spring/final-project/gradlew
+
+    - name: Compile project
+      shell: bash
+      working-directory: backend/spring/final-project
+      run: ./gradlew classes testClasses --no-daemon

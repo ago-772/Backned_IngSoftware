@@ -42,11 +42,11 @@ public class MateSessionController {
     return ResponseEntity.ok().build();
   }
 
-    @GetMapping
+  @GetMapping
   public ResponseEntity<List<MateSessionResponseDto>> findAll() {
     return ResponseEntity.ok(mateSessionService.findAll());
   }
- 
+
   /** Returns the most recent session. */
   @GetMapping("/latest")
   public ResponseEntity<MateSessionResponseDto> findLatest() {
