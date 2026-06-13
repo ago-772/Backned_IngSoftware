@@ -15,21 +15,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface MetricRepository extends JpaRepository<MetricEntity, Long> {
 
-    /**
-     * Returns all metrics of a given type ordered by most recent first.
-     * Used to display algorithm results in the frontend.
-     */
-    List<MetricEntity> findByTypeOrderByCreatedAtDesc(MetricType type);
+  /**
+   * Returns all metrics of a given type ordered by most recent first. Used to display algorithm
+   * results in the frontend.
+   */
+  List<MetricEntity> findByTypeOrderByCreatedAtDesc(MetricType type);
 
-    /**
-     * Returns the most recent metric of a given type.
-     * Used for live dashboard display of latest algorithm output.
-     */
-    Optional<MetricEntity> findTopByTypeOrderByCreatedAtDesc(MetricType type);
+  /**
+   * Returns the most recent metric of a given type. Used for live dashboard display of latest
+   * algorithm output.
+   */
+  Optional<MetricEntity> findTopByTypeOrderByCreatedAtDesc(MetricType type);
 
-    /**
-     * Returns all metrics of a given type recorded between two timestamps, ordered ascending.
-     * Used for historical chart visualization.
-     */
-    List<MetricEntity> findByTypeAndCreatedAtBetweenOrderByCreatedAtAsc(MetricType type, Instant from, Instant to);
+  /**
+   * Returns all metrics of a given type recorded between two timestamps, ordered ascending. Used
+   * for historical chart visualization.
+   */
+  List<MetricEntity> findByTypeAndCreatedAtBetweenOrderByCreatedAtAsc(
+      MetricType type, Instant from, Instant to);
 }

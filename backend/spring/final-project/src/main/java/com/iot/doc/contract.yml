@@ -18,21 +18,25 @@ TelemetryResponse:
   temperature: number
   targetTemperature: number
   waterLevel: number
-  createdAt: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
+  sessionId: number           # ID of the active session this reading belongs to
+  createdAt: string           # ISO 8601, e.g. "2026-05-31T12:00:00Z"
 
 # ===== ENDPOINTS =====
 # POST /telemetry → 201 | 400
 PostTelemetry:
   body: TelemetryRequest
   returns: TelemetryResponse
+  errors:
+    400: Validation failed (field errors map)
+    409: No active session found (IllegalStateException)
 
 # GET /telemetry → 200
 GetTelemetry:
-  returns: TelemetryResponse[]
+  returns: TelemetryResponse[]     # ordered by createdAt DESC
 
 # GET /telemetry/latest → 200 | 404
 GetLatestTelemetry:
-  returns: TelemetryResponse | null
+  returns: TelemetryResponse | 404
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,34 +45,35 @@ GetLatestTelemetry:
 
 # ===== REQUESTS =====
 EventRequest:
-  type: EventType             # requerido
+  type: EventType             # required
 
 EventType:
-  - SYSTEM_STOPPED
-  - SYSTEM_STARTED
-  - HEATING_STARTED
-  - HEATING_STOPPED
+  - POUR_MATE                 # user pressed the pour button
+  - HEATING_STARTED           # heater turned on
+  - HEATING_STOPPED           # heater turned off
+  - TARGET_TEMPERATURE_CHANGED # potentiometer changed the target
 
 # ===== RESPONSES =====
 EventResponse:
   id: number
   type: EventType
-  timestamp: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
-  deviceId: string
+  timestamp: string           # ISO 8601, e.g. "2026-05-31T12:00:00Z"
 
 # ===== ENDPOINTS =====
 # POST /events → 201 | 400
 PostEvent:
   body: EventRequest
   returns: EventResponse
+  errors:
+    400: Validation failed (field errors map)
 
 # GET /events → 200
 GetEvents:
-  returns: EventResponse[]
+  returns: EventResponse[]    # ordered by timestamp DESC
 
 # GET /events/latest → 200 | 404
 GetLatestEvent:
-  returns: EventResponse | null
+  returns: EventResponse | 404
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,8 +82,8 @@ GetLatestEvent:
 
 # ===== REQUESTS =====
 MateSessionRequest:
-  sessionType: SessionType    # requerido
-  totalPours: number | null   # opcional, cantidad de cebadas de la sesión
+  sessionType: SessionType    # required
+  totalPours: number | null   # optional; total button presses during the session
 
 SessionType:
   - SYSTEM_STARTED
@@ -89,18 +94,27 @@ MateSessionResponse:
   id: number
   sessionType: SessionType
   totalPours: number | null
-  createdAt: string           # ISO 8601, ej: "2026-05-31T12:00:00Z"
+  createdAt: string           # ISO 8601, e.g. "2026-05-31T12:00:00Z"
 
 # ===== ENDPOINTS =====
 # POST /sessions → 201 | 400
+#   Opens a new session. Fails with 500 if a SYSTEM_STARTED session already exists.
 PostMateSession:
-  body: MateSessionRequest
+  body: MateSessionRequest    # sessionType must be SYSTEM_STARTED
   returns: MateSessionResponse
+
+# POST /sessions/finish → 200 | 400
+#   Closes the active session, updates totalPours, and triggers metric computation.
+FinishMateSession:
+  body: MateSessionRequest    # sessionType must be SYSTEM_STOPPED; totalPours required
+  returns: void
+  errors:
+    409: No active (SYSTEM_STARTED) session found
 
 # GET /sessions → 200
 GetMateSessions:
-  returns: MateSessionResponse[]
+  returns: MateSessionResponse[]   # ordered by createdAt DESC
 
 # GET /sessions/latest → 200 | 404
 GetLatestMateSession:
-  returns: MateSessionResponse | null
+  returns: MateSessionResponse | 404

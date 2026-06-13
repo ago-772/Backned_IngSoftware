@@ -1,6 +1,4 @@
-# If sensor_readings already exists (e.g. Flask/Alembic), skip this changeset and mark it ran
-# so Liquibase stays in sync with the shared monorepo database.
-databaseChangeLog:
+﻿databaseChangeLog:
   - changeSet:
       id: 1-create-sensor-readings-table
       author: iot-course
@@ -10,13 +8,12 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
         - not:
-            tableExists:
-              tableName: sensor_readings
+            - tableExists:
+                tableName: sensor_readings
       changes:
         - createTable:
             tableName: sensor_readings
             columns:
-              # INTEGER + identity matches Flask/Alembic (SERIAL) for shared DB
               - column:
                   name: id
                   type: INTEGER
@@ -51,3 +48,169 @@ databaseChangeLog:
             columns:
               - column:
                   name: sensor_id
+
+  - changeSet:
+      id: 2-seed-dev-data
+      author: iot-course
+      context: dev
+      changes:
+        - sqlFile:
+            path: db/changelog/seed-dev.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 3-create-events-table
+      author: iot-course
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: events
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4-create-sessions-table
+      author: iot-course
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: sessions
+      changes:
+        - createTable:
+            tableName: sessions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_pours
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 5-create-metrics-table
+      author: iot-course
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: metrics
+      changes:
+        - createTable:
+            tableName: metrics
+            columns:
+              - column:
+                  name: id
+                  type: INTEGER
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6-create-telemetry-table
+      author: iot-course
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: telemetry
+      changes:
+        - createTable:
+            tableName: telemetry
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: BIGINT
+              - column:
+                  name: temperature
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_temperature
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: water_level
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

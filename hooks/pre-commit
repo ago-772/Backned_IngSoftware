@@ -1,0 +1,16 @@
+﻿#!/bin/sh
+echo "Running Spotless check..."
+
+cd backend/spring/final-project
+
+./gradlew spotlessCheck
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo "Spotless failed. Run './gradlew spotlessApply' to fix formatting."
+  exit 1
+fi
+
+echo "Spotless passed."
+exit 0

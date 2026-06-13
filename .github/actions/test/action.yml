@@ -1,0 +1,40 @@
+name: Test
+description: Runs the full unit test suite (AlertService groups, fake and mock tests). Requires the project to compile but needs no prior artifact.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('backend/spring/final-project/**/*.gradle*', 'backend/spring/final-project/**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Make gradlew executable
+      shell: bash
+      run: chmod +x backend/spring/final-project/gradlew
+
+    - name: Run unit tests
+      shell: bash
+      working-directory: backend/spring/final-project
+      run: ./gradlew test --no-daemon
+      env:
+        SPRING_PROFILES_ACTIVE: test
+
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: backend/spring/final-project/build/reports/tests/test/
+        retention-days: 7

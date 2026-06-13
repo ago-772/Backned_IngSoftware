@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TelemetryResponseDto {
 
-    private Long id;
-    private Double temperature;
-    private Double targetTemperature;
-    private Double waterLevel;
-    private Instant createdAt;
-    private Long sessionId;
+  private Long id;
+  private Double temperature;
+  private Double targetTemperature;
+  private Double waterLevel;
+  private Instant createdAt;
+  private Long sessionId;
 
-    public static TelemetryResponseDto fromEntity(TelemetryEntity entity) {
+  public static TelemetryResponseDto fromEntity(TelemetryEntity entity) {
 
-        return TelemetryResponseDto.builder()
-                .id(entity.getId())
-                .temperature(entity.getTemperature())
-                .targetTemperature(entity.getTargetTemperature())
-                .waterLevel(entity.getWaterLevel())
-                .createdAt(entity.getCreatedAt())
-                .sessionId(entity.getSessionId().getId())
-                .build();
-    }
+    return TelemetryResponseDto.builder()
+        .id(entity.getId())
+        .temperature(entity.getTemperature())
+        .targetTemperature(entity.getTargetTemperature())
+        .waterLevel(entity.getWaterLevel())
+        .createdAt(entity.getCreatedAt())
+        .sessionId(entity.getSessionId().getId())
+        .build();
+  }
 }

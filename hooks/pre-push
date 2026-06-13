@@ -1,0 +1,16 @@
+#!/bin/sh
+echo 'Running tests...'
+
+cd backend/spring/final-project
+
+./gradlew test
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ''
+  echo 'Tests failed. Fix them before pushing.'
+  exit 1
+fi
+
+echo 'Tests passed.'
+exit 0

@@ -7,3 +7,4 @@ services:
       - 'POSTGRES_USER=soft_eng_user'
     ports:
       - '5432:5432'
+ 

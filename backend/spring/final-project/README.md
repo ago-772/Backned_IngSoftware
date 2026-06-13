@@ -2,7 +2,7 @@
 
 REST API aligned with the course contract: **POST /sensors** and **GET /sensors**.
 
-## Prerequisites
+## Prerequisites 
 
 - **JDK 21**
 - **PostgreSQL** (monorepo `docker/` stack; default host port **5433**)
